@@ -20,7 +20,7 @@ pub struct InfoHash(digest::Digest);
 
 impl InfoHash {
     pub fn new<T: AsRef<[u8]>>(key: T) -> InfoHash {
-        let hash = digest::digest(&digest::SHA1, key.as_ref());
+        let hash = digest::digest(&digest::SHA1_FOR_LEGACY_USE_ONLY, key.as_ref());
         InfoHash(hash)
     }
 
@@ -111,8 +111,7 @@ impl OpenDht {
         let tx = Box::new(tx);
         let tx = Box::into_raw(tx);
 
-        let socks: Vec<libc::sockaddr>;
-        socks = sockets.iter().map(convert_socketaddr).collect();
+        let socks: Vec<libc::sockaddr> = sockets.iter().map(convert_socketaddr).collect();
 
         let ptr = socks.as_ptr();
 
@@ -245,7 +244,7 @@ impl OpenDht {
         extern "C" fn cb(src: *const libc::c_uchar, len: libc::size_t, dst: *mut Vec<u8>) {
             unsafe {
                 let src = std::slice::from_raw_parts(src, len);
-                (*dst).copy_from_slice(&src);
+                (*dst).copy_from_slice(src);
             }
         }
 

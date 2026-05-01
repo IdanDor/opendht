@@ -61,11 +61,7 @@ extern "C" void dht_bootstrap(dht_t *dht, sockaddr sa[], size_t sa_count, done_c
     done_cb(success, done_ptr);
   };
 
-  #if OPENDHT_MAJOR_VERSION == 2
-      std::vector<dht::SockAddr> vec;
-  #else
-      std::vector<std::pair<sockaddr_storage, unsigned int>> vec;
-  #endif
+  std::vector<dht::SockAddr> vec;
   vec.reserve(sa_count);
 
   for (size_t i = 0; i < sa_count; i++) {
@@ -77,13 +73,7 @@ extern "C" void dht_bootstrap(dht_t *dht, sockaddr sa[], size_t sa_count, done_c
       else
           throw std::runtime_error("Unknown address family");
 
-      #if OPENDHT_MAJOR_VERSION == 2
-          vec.push_back(dht::SockAddr(&sa[i], len));
-      #else
-          struct sockaddr_storage ss;
-          memcpy(&ss, &sa[i], len);
-          vec.push_back(std::make_pair(ss, len));
-      #endif
+      vec.push_back(dht::SockAddr(&sa[i], len));
   }
 
   DHT(dht)->bootstrap(vec, cb);
