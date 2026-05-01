@@ -1,8 +1,3 @@
-extern crate futures;
-extern crate libc;
-extern crate nix;
-extern crate ring;
-
 mod sys;
 
 use std::net::SocketAddr;
@@ -10,8 +5,7 @@ use std::time::Duration;
 
 use futures::channel::mpsc;
 use futures::channel::oneshot;
-use nix::sys::socket::InetAddr;
-use nix::sys::socket::SockAddr;
+use nix::sys::socket::{SockaddrLike, SockaddrStorage};
 
 use ring::digest;
 
@@ -78,9 +72,8 @@ extern "C" fn get_callback(
 }
 
 fn convert_socketaddr(s: &SocketAddr) -> libc::sockaddr {
-    let s = InetAddr::from_std(s);
-    let s = SockAddr::new_inet(s);
-    unsafe { *s.as_ffi_pair().0 }
+    let s = SockaddrStorage::from(*s);
+    unsafe { *s.as_ptr() }
 }
 
 impl OpenDht {

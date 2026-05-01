@@ -7,7 +7,7 @@ pub type dht_t = *mut libc::c_void;
 pub type c_bool = libc::c_uchar;
 
 #[link(name = "opendht")]
-extern "C" {
+unsafe extern "C" {
     pub fn dht_init() -> dht_t;
     pub fn dht_drop(dht: dht_t);
     pub fn dht_join(dht: dht_t);

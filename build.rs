@@ -33,7 +33,9 @@ fn main() {
         cc_builder.includes(Some(dst.join("include")));
     };
 
-    println!("cargo:rustc-flags=-lopendht -lgnutls -lssl -lcrypto -lnettle -lpthread -ljsoncpp -largon2 -lhttp_parser");
+    println!(
+        "cargo:rustc-flags=-lopendht -lgnutls -lssl -lcrypto -lnettle -lpthread -ljsoncpp -largon2 -lhttp_parser"
+    );
 
     cc_builder.compile("dht-wrapper");
 

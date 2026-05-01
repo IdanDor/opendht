@@ -1,6 +1,4 @@
-extern crate futures;
-extern crate opendht;
-
+use async_std::task::sleep;
 use futures::prelude::*;
 use std::net::ToSocketAddrs;
 use std::sync::Arc;
@@ -38,8 +36,7 @@ fn main() {
 
         let f = async move {
             while let Some(next) = dht2.tick() {
-                use async_std::prelude::*;
-                futures::future::ready(()).delay(next).await;
+                sleep(next).await;
             }
         };
         async_std::task::spawn(f);
